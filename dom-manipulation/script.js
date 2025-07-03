@@ -44,6 +44,10 @@ function createAddQuoteForm() {
     category: trimmedQuoteCategory,
   };
   quotes.push(newQuoteObj);
+
+  newQuoteText.value="";
+  newQuoteCategory.value="";
+
   showRandomQuote();
 }
 
