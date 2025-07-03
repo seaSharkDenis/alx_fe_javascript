@@ -27,7 +27,16 @@ newQuote.addEventListener("click", showRandomQuote);
 
 function showRandomQuote() {
   let quoteNum = Math.floor(Math.random() * quotes.length);
-  quoteDisplay.innerHTML = quotes[quoteNum]["text"];
+//   quoteDisplay.innerHTML = quotes[quoteNum]["text"];
+
+const quotePara = document.createElement("p");
+quotePara.textContent = quotes[quoteNum]["text"];
+
+const categorySpan = document.createElement("span");
+categorySpan.textContent = `(${quotes[quoteNum].category})`;
+
+quotePara.appendChild(categorySpan);
+quoteDisplay.appendChild(quotePara);
 }
 
 function createAddQuoteForm() {
