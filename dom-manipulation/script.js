@@ -25,9 +25,9 @@ const quotes = [
   },
 ];
 
-newQuote.addEventListener("click", ShowRandomQuote);
+newQuote.addEventListener("click", showRandomQuote);
 
-function ShowRandomQuote() {
+function showRandomQuote() {
   let quoteNum = Math.floor(Math.random() * quotes.length);
   quoteDisplay.innerHTML = quotes[quoteNum]["quote"];
 }
