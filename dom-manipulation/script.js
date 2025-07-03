@@ -5,21 +5,21 @@ const newQuoteCategory = document.getElementById("newQuoteCategory");
 
 const quotes = [
   {
-    quote:
+    text:
       "The only limit to our realization of tomorrow is our doubts of today.",
     category: "Motivation",
   },
   {
-    quote: "In the middle of every difficulty lies opportunity.",
+    text: "In the middle of every difficulty lies opportunity.",
     category: "Inspiration",
   },
   {
-    quote: "Life is what happens when you're busy making other plans.",
+    text: "Life is what happens when you're busy making other plans.",
     category: "Life",
   },
-  { quote: "The purpose of our lives is to be happy.", category: "Happiness" },
+  { text: "The purpose of our lives is to be happy.", category: "Happiness" },
   {
-    quote:
+    text:
       "Success usually comes to those who are too busy to be looking for it.",
     category: "Success",
   },
@@ -42,11 +42,11 @@ function createAddQuoteForm() {
     // newQuoteText.innerHTML = "";
     // newQuoteText.innerHTML = "";
   const newQuoteObj = {
-    quote: trimmedQuoteText,
+    text: trimmedQuoteText,
     category: trimmedQuoteCategory
   };
   quotes.push(newQuoteObj);
-  alert(`Quote Added: ${newQuoteObj["quote"], newQuoteObj["category"]}`);
+  alert(`Quote Added: ${newQuoteObj["text"], newQuoteObj["category"]}`);
 }
 
 function addQuote() {
