@@ -5,8 +5,7 @@ const newQuoteCategory = document.getElementById("newQuoteCategory");
 
 const quotes = [
   {
-    text:
-      "The only limit to our realization of tomorrow is our doubts of today.",
+    text: "The only limit to our realization of tomorrow is our doubts of today.",
     category: "Motivation",
   },
   {
@@ -19,8 +18,7 @@ const quotes = [
   },
   { text: "The purpose of our lives is to be happy.", category: "Happiness" },
   {
-    text:
-      "Success usually comes to those who are too busy to be looking for it.",
+    text: "Success usually comes to those who are too busy to be looking for it.",
     category: "Success",
   },
 ];
@@ -29,24 +27,24 @@ newQuote.addEventListener("click", showRandomQuote);
 
 function showRandomQuote() {
   let quoteNum = Math.floor(Math.random() * quotes.length);
-  quoteDisplay.innerHTML = quotes[quoteNum]["quote"];
+  quoteDisplay.innerHTML = quotes[quoteNum]["text"];
 }
 
 function createAddQuoteForm() {
-    const trimmedQuoteText = newQuoteText.value.trim();
-    const trimmedQuoteCategory = newQuoteCategory.value.trim();
-    if(!trimmedQuoteText || !trimmedQuoteCategory){
-        console.error("Please fill the provided fields before proceeding.");
-        return false;
-    }
-    // newQuoteText.innerHTML = "";
-    // newQuoteText.innerHTML = "";
+  const trimmedQuoteText = newQuoteText.value.trim();
+  const trimmedQuoteCategory = newQuoteCategory.value.trim();
+  if (!trimmedQuoteText || !trimmedQuoteCategory) {
+    console.error("Please fill the provided fields before proceeding.");
+    return false;
+  }
+  // newQuoteText.innerHTML = "";
+  // newQuoteText.innerHTML = "";
   const newQuoteObj = {
     text: trimmedQuoteText,
-    category: trimmedQuoteCategory
+    category: trimmedQuoteCategory,
   };
   quotes.push(newQuoteObj);
-  alert(`Quote Added: ${newQuoteObj["text"], newQuoteObj["category"]}`);
+  showRandomQuote();
 }
 
 function addQuote() {
