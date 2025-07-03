@@ -42,11 +42,11 @@ function createAddQuoteForm() {
     // newQuoteText.innerHTML = "";
     // newQuoteText.innerHTML = "";
   const newQuoteObj = {
-    text: trimmedQuoteText,
+    quote: trimmedQuoteText,
     category: trimmedQuoteCategory
   };
   quotes.push(newQuoteObj);
-  alert(`Quote Added: ${newQuoteObj["text"], newQuoteObj["category"]}`);
+  alert(`Quote Added: ${newQuoteObj["quote"], newQuoteObj["category"]}`);
 }
 
 function addQuote() {
