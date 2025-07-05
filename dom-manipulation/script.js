@@ -3,9 +3,7 @@ const newQuote = document.getElementById("newQuote");
 const newQuoteText = document.getElementById("newQuoteText");
 const newQuoteCategory = document.getElementById("newQuoteCategory");
 
-let quotes = [
-   
-];
+let quotes = [];
 
 // Implement localStorage to store newly added quotes
 const storedQuotes = localStorage.getItem("quotes");
@@ -31,32 +29,36 @@ if (storedQuotes) {
       category: "Success",
     },
   ];
-  localStorage.setItem("quotes", JSON.stringify(quotes));
+
+  saveQuotes();
 }
 showRandomQuote();
 
 newQuote.addEventListener("click", showRandomQuote);
 
 function showRandomQuote() {
-  let quoteNum = Math.floor(Math.random() * quotes.length);
-  //   quoteDisplay.innerHTML = quotes[quoteNum]["text"];
+  if (quotes.length === 0) return;
+
+  quoteDisplay.innerHTML = ""; // Clear old quote
+
+  const quoteNum = Math.floor(Math.random() * quotes.length);
 
   const quotePara = document.createElement("p");
   quotePara.textContent = quotes[quoteNum]["text"];
 
   const categorySpan = document.createElement("span");
-  categorySpan.textContent = `(${quotes[quoteNum].category})`;
+  categorySpan.textContent = ` (${quotes[quoteNum].category})`;
 
   quotePara.appendChild(categorySpan);
   quoteDisplay.appendChild(quotePara);
 }
 
-function createAddQuoteForm() {
+function addQuote() {
   const trimmedQuoteText = newQuoteText.value.trim();
   const trimmedQuoteCategory = newQuoteCategory.value.trim();
   if (!trimmedQuoteText || !trimmedQuoteCategory) {
     console.error("Please fill the provided fields before proceeding.");
-    return false;
+    return;
   }
 
   const newQuoteObj = {
@@ -65,8 +67,7 @@ function createAddQuoteForm() {
   };
 
   quotes.push(newQuoteObj);
-  //   Save to local storage after adding a quote.
-  localStorage.setItem("quotes", JSON.stringify(quotes));
+  saveQuotes();
 
   newQuoteText.value = "";
   newQuoteCategory.value = "";
@@ -74,6 +75,17 @@ function createAddQuoteForm() {
   showRandomQuote();
 }
 
-function addQuote() {
-  createAddQuoteForm();
+function saveQuotes() {
+  localStorage.setItem("quotes", JSON.stringify(quotes));
+}
+
+function importFromJsonFile(event) {
+  const fileReader = new FileReader();
+  fileReader.onload = function (event) {
+    const importedQuotes = JSON.parse(event.target.result);
+    quotes.push(...importedQuotes);
+    saveQuotes();
+    alert("Quotes imported successfully!");
+  };
+  fileReader.readAsText(event.target.files[0]);
 }
