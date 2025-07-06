@@ -167,66 +167,59 @@ function displayQuote(quoteObj) {
   quoteDisplay.appendChild(quotePara);
 }
 
-const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; 
-const SYNC_INTERVAL = 10000; // Sync every 10 seconds
 
-// Start periodic sync
-setInterval(syncWithServer, SYNC_INTERVAL);
-
-function syncWithServer() {
-  fetch(SERVER_URL)
-    .then((response) => response.json())
-    .then((serverData) => {
-      let serverQuotes = serverData.map((item) => ({
-        text: item.title,
-        category: item.body || "Uncategorized",
-      }));
-
-      let newQuotesAdded = 0;
-      let conflictsResolved = 0;
-
-      serverQuotes.forEach((serverQuote) => {
-        const localMatch = quotes.find((q) => q.text === serverQuote.text);
-
-        if (!localMatch) {
-          quotes.push(serverQuote);
-          newQuotesAdded++;
-        } else if (localMatch.category !== serverQuote.category) {
-          localMatch.category = serverQuote.category;
-          conflictsResolved++;
-        }
-      });
-
-      if (newQuotesAdded > 0 || conflictsResolved > 0) {
-        saveQuotes();
-        populateCategories();
-        filterQuotes();
-
-        showNotification(
-          `${newQuotesAdded} new quote(s) added, ${conflictsResolved} conflict(s) resolved from server.`
-        );
-      }
-    })
-    .catch((err) => {
-      console.error("Server sync failed:", err);
+// -------- Server Sync Logic --------
+function fetchQuotesFromServer() {
+  return fetch("https://jsonplaceholder.typicode.com/posts")
+    .then(res => res.json())
+    .then(data => data.map(post => ({ text: post.title, category: post.body || "Uncategorized" })))
+    .catch(err => {
+      console.error("Error fetching server quotes:", err);
+      return [];
     });
 }
 
+function syncWithServer() {
+  fetchQuotesFromServer().then(serverQuotes => {
+    let newQuotes = 0;
+    let conflicts = 0;
+
+    serverQuotes.forEach(serverQuote => {
+      const local = quotes.find(q => q.text === serverQuote.text);
+      if (!local) {
+        quotes.push(serverQuote);
+        newQuotes++;
+      } else if (local.category !== serverQuote.category) {
+        local.category = serverQuote.category; // Server takes priority
+        conflicts++;
+      }
+    });
+
+    if (newQuotes > 0 || conflicts > 0) {
+      saveQuotes();
+      populateCategories();
+      filterQuotes();
+      showNotification(`${newQuotes} new quote(s) added, ${conflicts} conflict(s) resolved.`);
+    }
+  });
+}
+
 function showNotification(message) {
-  let notif = document.createElement("div");
+  const notif = document.createElement("div");
   notif.textContent = message;
-  notif.style.position = "fixed";
-  notif.style.bottom = "20px";
-  notif.style.right = "20px";
-  notif.style.backgroundColor = "#4caf50";
-  notif.style.color = "#fff";
-  notif.style.padding = "10px 15px";
-  notif.style.borderRadius = "5px";
-  notif.style.zIndex = 1000;
+  Object.assign(notif.style, {
+    position: "fixed",
+    bottom: "20px",
+    right: "20px",
+    backgroundColor: "#4caf50",
+    color: "#fff",
+    padding: "10px 15px",
+    borderRadius: "5px",
+    zIndex: 1000,
+  });
 
   document.body.appendChild(notif);
-
-  setTimeout(() => {
-    notif.remove();
-  }, 4000);
+  setTimeout(() => notif.remove(), 4000);
 }
+
+setInterval(syncWithServer, 15000);
