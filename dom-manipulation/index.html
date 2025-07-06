@@ -19,6 +19,11 @@
         <button onclick="addQuote()">Add Quote</button>
     </div>
     <div id="quoteDisplay"></div>
+    <label for="categoryFilter">Select Quote Category</label>
+    <select id="categoryFilter" onchange="filterQuotes()">
+      <option value="all">All Categories</option>
+      <!-- Dynamically populated categories -->
+    </select>
     <button id="newQuote">Show New Quote</button>
 
     <label for="importFile">Upload File:</label>
