@@ -203,6 +203,7 @@ async function syncQuotes() {
       if (!local) {
         quotes.push(serverQuote);
         newQuotes++;
+        alert("Quotes synced with server!");
       } else if (local.category !== serverQuote.category) {
         local.category = serverQuote.category; // Server takes priority
         conflicts++;
