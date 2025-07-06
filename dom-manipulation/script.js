@@ -192,7 +192,7 @@ function sendQuoteToServer(quoteObj) {
     .catch(err => console.error("Error sending quote to server:", err));
 }
 
-async function syncWithServer() {
+async function syncQuotes() {
   try {
     const serverQuotes = await fetchQuotesFromServer();
     let newQuotes = 0;
@@ -239,7 +239,7 @@ function showNotification(message) {
 }
 
 // Start periodic sync every 15 seconds
-setInterval(syncWithServer, 15000);
+setInterval(syncQuotes, 15000);
 
 // Initial sync on page load
-syncWithServer();
+syncQuotes();
