@@ -34,8 +34,11 @@ if (storedQuotes) {
 }
 
 populateCategories();
+showRandomQuote();
 
-// Restore last seelcted filter or show random quote
+newQuote.addEventListener("click", showRandomQuote);
+
+// Restore last selected filter or show random quote
 const savedCategory = localStorage.getItem("selectedCategory");
 if (savedCategory) {
   categoryFilter.value = savedCategory;
@@ -43,8 +46,6 @@ if (savedCategory) {
 } else {
   showRandomQuote();
 }
-
-newQuote.addEventListener("click", showRandomQuote);
 
 function showRandomQuote() {
   if (quotes.length === 0) return;
@@ -169,18 +170,20 @@ function displayQuote(quoteObj) {
 
 
 // -------- Server Sync Logic --------
-function fetchQuotesFromServer() {
-  return fetch("https://jsonplaceholder.typicode.com/posts")
-    .then(res => res.json())
-    .then(data => data.map(post => ({ text: post.title, category: post.body || "Uncategorized" })))
-    .catch(err => {
-      console.error("Error fetching server quotes:", err);
-      return [];
-    });
+async function fetchQuotesFromServer() {
+  try {
+    const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const data = await res.json();
+    return data.map(post => ({ text: post.title, category: post.body || "Uncategorized" }));
+  } catch (err) {
+    console.error("Error fetching server quotes:", err);
+    return [];
+  }
 }
 
-function syncWithServer() {
-  fetchQuotesFromServer().then(serverQuotes => {
+async function syncWithServer() {
+  try {
+    const serverQuotes = await fetchQuotesFromServer();
     let newQuotes = 0;
     let conflicts = 0;
 
@@ -201,7 +204,9 @@ function syncWithServer() {
       filterQuotes();
       showNotification(`${newQuotes} new quote(s) added, ${conflicts} conflict(s) resolved.`);
     }
-  });
+  } catch (err) {
+    console.error("Error during sync:", err);
+  }
 }
 
 function showNotification(message) {
@@ -222,4 +227,8 @@ function showNotification(message) {
   setTimeout(() => notif.remove(), 4000);
 }
 
+// Start periodic sync every 15 seconds
 setInterval(syncWithServer, 15000);
+
+// Initial sync on page load
+syncWithServer();
