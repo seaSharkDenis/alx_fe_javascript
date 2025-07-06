@@ -3,7 +3,8 @@ const newQuote = document.getElementById("newQuote");
 const newQuoteText = document.getElementById("newQuoteText");
 const newQuoteCategory = document.getElementById("newQuoteCategory");
 
-let quotes = [];
+let quotes = [
+];
 
 // Implement localStorage to store newly added quotes
 const storedQuotes = localStorage.getItem("quotes");
@@ -88,4 +89,24 @@ function importFromJsonFile(event) {
     alert("Quotes imported successfully!");
   };
   fileReader.readAsText(event.target.files[0]);
+}
+
+function exportToJsonFile(){
+  if (quotes.length === 0) {
+    alert("No quotes to export.");
+    return;
+  }
+
+  const dataStr = JSON.stringify(quotes, null, 2);
+  const blob = new Blob([dataStr], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "quotes.json";
+  link.click();
+
+  URL.revokeObjectURL(url);
+
+  alert(`Quotes exported successfully.`)
 }
